@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["createMany"]
+}
+
+
+enum Role {
+  USER
+  ADMIN
+  OWNER
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  username String @unique
+  email String @unique
+  hashword String
+  role Role
+  comments Comment[]
+  post_likes BlogPost[] @relation("post_likes")
+  comment_likes Comment[] @relation("comment_likes")
+}
+
+model BlogPost {
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  author_id Int
+  author User @relation(fields: [author_id], references: [id])
+  comments Comment[]
+  liked_by User[] @relation("post_likes")
+  created_at DateTime @default(now())
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  content String
+  user_id Int
+  user User @relation(fields: [user_id], references: [id])
+  post_id Int
+  post BlogPost @relation(fields: [post_id], references: [id])
+  liked_by User[] @relation("comment_likes")
+  created_at DateTime @default(now())
+}
