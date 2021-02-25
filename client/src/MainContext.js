@@ -29,10 +29,15 @@ export const MainProvider = ({ children }) => {
     <MainContext.Provider
       value={{
         authenticated,
-        setAuthenticated
+        loading,
+        user,
+        setAuthenticated,
+        setLoading,
+        setUser,
       }}
     >
       <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
     </MainContext.Provider>
   );
 };
+
